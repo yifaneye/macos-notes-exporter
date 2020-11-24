@@ -42,12 +42,19 @@ var savePath = currentApp.chooseFolder({
 	withPrompt: "Choose output location",
 }).toString();
 
+// set up progress
+Progress.totalUnitCount = selectedNotes.length;
+Progress.completedUnitCount = 0;
+Progress.description = "Exporting Notes...";
+Progress.additionalDescription = `Exporting notes into ${outputFormat}s.`;
+
 // loop through all notes in the chosen account
 for (var i = 0; i < allNotesInAccount.length; i++) {
 
 	// check against selected notes
 	if (selectedNotes.includes(allNotesInAccount[i].name())) {
-
+		// display progress
+		Progress.additionalDescription = `Exporting Note ${Progress.completedUnitCount + 1} of ${Progress.totalUnitCount}`;
 		// name file path
 		var noteFilePath = `${savePath}/${allNotesInAccount[i].name()}${outputFileSuffix}`;
 		// open file
@@ -57,5 +64,7 @@ for (var i = 0; i < allNotesInAccount.length; i++) {
 		currentApp.setEof(openedNoteFile, {to: 0});
 		currentApp.write(allNotesInAccount[i][outputFileFormat](), {to: openedNoteFile});
 		currentApp.closeAccess(openedNoteFile);
+		// increment progress
+		Progress.completedUnitCount++;
 	}
 }
