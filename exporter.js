@@ -55,16 +55,51 @@ for (var i = 0; i < allNotesInAccount.length; i++) {
 	if (selectedNotes.includes(allNotesInAccount[i].name())) {
 		// display progress
 		Progress.additionalDescription = `Exporting Note ${Progress.completedUnitCount + 1} of ${Progress.totalUnitCount}`;
+
 		// name file path
 		var noteFilePath = `${savePath}/${allNotesInAccount[i].name()}${outputFileSuffix}`;
-		// open file
-		var openedNoteFile = currentApp.openForAccess(Path(noteFilePath), {writePermission: true});
-		if (!openedNoteFile) continue;
+
 		// write note to file
-		currentApp.setEof(openedNoteFile, {to: 0});
-		currentApp.write(allNotesInAccount[i][outputFileFormat](), {to: openedNoteFile});
-		currentApp.closeAccess(openedNoteFile);
+		writeTextToFile(noteFilePath, allNotesInAccount[i][outputFileFormat](), false);
+
 		// increment progress
 		Progress.completedUnitCount++;
+	}
+}
+
+function writeTextToFile(file, text, overwriteExistingContent=true) {
+	try {
+
+		// Convert the file to a string
+		var fileString = file.toString();
+
+		// Open the file for writing
+		var openedFile = currentApp.openForAccess(Path(fileString), {writePermission: true});
+
+		// Clear the file if content should be overwritten
+		if (overwriteExistingContent) {
+			currentApp.setEof(openedFile, {to: 0})
+		}
+
+		// Write the new content to the file
+		currentApp.write(text, {to: openedFile, startingAt: currentApp.getEof(openedFile)});
+
+		// Close the file
+		currentApp.closeAccess(openedFile);
+
+		// Return a boolean indicating that writing was successful
+		return true;
+	} catch (error) {
+
+		try {
+			// Close the file
+			currentApp.closeAccess(file);
+		} catch (error) {
+			// Report the error is closing failed
+			console.log(`Couldn't close file: ${error}`);
+		}
+
+		// Return a boolean indicating that writing was successful
+		return false;
 	}
 }
