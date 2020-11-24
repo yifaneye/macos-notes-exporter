@@ -38,7 +38,9 @@ if (outputFormat === "Text file (.txt)") {
 }
 
 // ask for folder to save notes in
-var savePath = currentApp.chooseFolder().toString();
+var savePath = currentApp.chooseFolder({
+	withPrompt: "Choose output location",
+}).toString();
 
 // loop through all notes in the chosen account
 for (var i = 0; i < allNotesInAccount.length; i++) {
