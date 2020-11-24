@@ -68,6 +68,13 @@ for (var i = 0; i < allNotesInAccount.length; i++) {
 	}
 }
 
+// display notification
+currentApp.displayNotification("All selected notes have been exported.", {
+	withTitle: "MacOS Notes Exporter",
+	subtitle: "Export is complete.",
+	soundName: "Glass"
+});
+
 function displayError(errorMessage) {
 	currentApp.displayDialog(errorMessage)
 }
