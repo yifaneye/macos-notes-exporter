@@ -11,23 +11,23 @@ var notesAccount = currentApp.chooseFromList(['iCloud', 'On My Mac'], {
 	withPrompt: "Choose Notes Account",
 	defaultItems: ['iCloud'],
 });
-if (notesAccount.length <= 0) throw new Error("Notes Account not chosen");
+if (notesAccount.length <= 0) displayError("Notes Account not chosen");
 var allNotesInAccount = notesApp.accounts.byName(notesAccount).notes;
-if (allNotesInAccount.length <= 0) throw new Error("Notes Account not found");
+if (allNotesInAccount.length <= 0) displayError("Notes Account not found");
 
 // ask for notes from the chosen account
 var selectedNotes = currentApp.chooseFromList(allNotesInAccount.name(), {
 	withPrompt: "Select Notes",
 	multipleSelectionsAllowed: true,
 });
-if (selectedNotes.length <= 0) throw new Error("No note selected");
+if (selectedNotes.length <= 0) displayError("No note selected");
 
 // ask for notes from the chosen account
 var outputFormat = currentApp.chooseFromList(['Text file (.txt)', 'Hypertext file (.html)'], {
 	withPrompt: "Choose output format",
 	defaultItems: ['Text file (.txt)'],
 }).toString();
-if (outputFormat.length <= 0) throw new Error("No output format");
+if (outputFormat.length <= 0) displayError("No output format");
 
 if (outputFormat === "Text file (.txt)") {
 	outputFileFormat = 'plaintext';
@@ -41,6 +41,7 @@ if (outputFormat === "Text file (.txt)") {
 var savePath = currentApp.chooseFolder({
 	withPrompt: "Choose output location",
 }).toString();
+if (savePath.length <= 0) displayError("No output location specified");
 
 // set up progress
 Progress.totalUnitCount = selectedNotes.length;
@@ -65,6 +66,10 @@ for (var i = 0; i < allNotesInAccount.length; i++) {
 		// increment progress
 		Progress.completedUnitCount++;
 	}
+}
+
+function displayError(errorMessage) {
+	currentApp.displayDialog(errorMessage)
 }
 
 function writeTextToFile(file, text, overwriteExistingContent=true) {
