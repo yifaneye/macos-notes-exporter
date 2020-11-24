@@ -9,6 +9,7 @@ currentApp.includeStandardAdditions = true;
 // ask for notes account
 var notesAccount = currentApp.chooseFromList(['iCloud', 'On My Mac'], {
 	withPrompt: "Choose Notes Account",
+	defaultItems: ['iCloud'],
 });
 if (notesAccount.length <= 0) throw new Error("Notes Account not chosen");
 var allNotesInAccount = notesApp.accounts.byName(notesAccount).notes;
@@ -17,13 +18,14 @@ if (allNotesInAccount.length <= 0) throw new Error("Notes Account not found");
 // ask for notes from the chosen account
 var selectedNotes = currentApp.chooseFromList(allNotesInAccount.name(), {
 	withPrompt: "Select Notes",
-	multipleSelectionsAllowed: true
+	multipleSelectionsAllowed: true,
 });
 if (selectedNotes.length <= 0) throw new Error("No note selected");
 
 // ask for notes from the chosen account
 var outputFormat = currentApp.chooseFromList(['Text file (.txt)', 'Hypertext file (.html)'], {
 	withPrompt: "Choose output format",
+	defaultItems: ['Text file (.txt)'],
 }).toString();
 if (outputFormat.length <= 0) throw new Error("No output format");
 
