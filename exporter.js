@@ -22,17 +22,17 @@ var selectedNotes = currentApp.chooseFromList(allNotesInAccount.name(), {
 });
 if (selectedNotes.length <= 0) displayError("No note selected");
 
-// ask for notes from the chosen account
-var outputFormat = currentApp.chooseFromList(['Text file (.txt)', 'Hypertext file (.html)'], {
+// ask for file format to save notes in
+var outputFormat = currentApp.chooseFromList(['Text (.txt) file', 'Hypertext (.html) file'], {
 	withPrompt: "Choose output format",
-	defaultItems: ['Text file (.txt)'],
+	defaultItems: ['Hypertext (.html) file'],
 }).toString();
 if (outputFormat.length <= 0) displayError("No output format");
 
-if (outputFormat === "Text file (.txt)") {
+if (outputFormat === "Text (.txt) file") {
 	outputFileFormat = 'plaintext';
 	outputFileSuffix = '.txt';
-} else if (outputFormat === "Hypertext file (.html)") {
+} else if (outputFormat === "Hypertext (.html) file") {
 	outputFileFormat = 'body';
 	outputFileSuffix = '.html';
 }
